@@ -1,0 +1,37 @@
+{
+  "name": "whatsapp-twilio-lead-router",
+  "version": "0.3.0",
+  "description": "Twilio SMS → intent classification → WhatsApp auto-reply router for real-estate teams.",
+  "main": "src/server.js",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "demo": "node scripts/demo.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "twilio": "^5.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sarteta/whatsapp-twilio-lead-router"
+  },
+  "keywords": [
+    "twilio",
+    "whatsapp",
+    "sms",
+    "real-estate",
+    "lead-routing",
+    "automation",
+    "intent-classification"
+  ],
+  "author": "Santiago Arteta",
+  "license": "MIT"
+}
