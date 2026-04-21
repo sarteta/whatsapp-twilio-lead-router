@@ -34,18 +34,18 @@ What this router does:
 
 ## Architecture
 
+```mermaid
+flowchart LR
+    TW1[Twilio SMS number] -->|inbound SMS| APP[/webhooks/sms<br/>Express handler/]
+    APP --> CLS{rule classifier}
+    CLS -- unsure --> LLM[LLM fallback<br/>optional]
+    LLM --> CLS
+    CLS --> DB[(SQLite<br/>event log)]
+    CLS -->|auto-reply| TW2[Twilio WhatsApp]
+    CLS -->|hot lead| SLACK[Slack / CRM webhook]
 ```
-┌──────────┐  SMS  ┌──────────────────────────────────────┐  WhatsApp  ┌──────────┐
-│  Twilio  │──────►│  /webhooks/sms  (Express)            │───────────►│  Twilio  │
-│  number  │       │   │                                  │   reply    │ WhatsApp │
-└──────────┘       │   ├─ normalize phone (E.164)         │            └──────────┘
-                   │   ├─ rule-based intent classifier    │
-                   │   ├─ LLM fallback (only if unsure)   │            ┌──────────┐
-                   │   ├─ persist lead + event (SQLite)   │            │  Slack / │
-                   │   ├─ template lookup by intent       │───────────►│   CRM    │
-                   │   └─ notify webhook (high-intent)    │  notify    │ webhook  │
-                   └──────────────────────────────────────┘            └──────────┘
-```
+
+Versión en español: [README.es.md](./README.es.md)
 
 ## Features
 
