@@ -8,7 +8,7 @@ Drop-in Node.js server for **real-estate teams** that:
 4. Persists the lead + conversation in SQLite with an append-only event log.
 5. Routes high-intent leads to a webhook (`LEAD_NOTIFY_WEBHOOK`) — Slack, CRM, whatever — with full context.
 
-Built for the kind of small-to-mid brokerage that wants "react in 60 seconds or lose the lead" without paying for a bloated CRM subscription.
+Built for small/mid brokerages that want "react in 60 seconds or lose the lead" and don't want a full CRM subscription for it.
 
 > Demo data is synthetic (`Acme Realty`, `+15551234567`). Wire in real Twilio creds in `.env` to run against a real number.
 
@@ -16,17 +16,21 @@ Built for the kind of small-to-mid brokerage that wants "react in 60 seconds or 
 
 ## Why this exists
 
-In real-estate, **90%+ of lead conversion happens in the first 5 minutes** after inbound contact. Most teams fail that bar because:
+In real-estate, most lead conversion happens in the first few minutes
+after inbound contact. Brokerages miss that window all the time because:
 
-- Agents miss the SMS at 9:47 PM.
-- "Autoresponders" send generic "thanks we'll be in touch" — which burns the lead.
-- When an agent does reply, there's no intent tag, so they treat a hot buyer and a cold tire-kicker the same way.
+- Agent sees the SMS at 9:47 PM and deals with it next morning.
+- Generic "thanks, we'll be in touch" autoresponders burn the lead.
+- When an agent does reply, there's no intent tag, so a hot buyer and a
+  tire-kicker get treated the same.
 
-This router closes the gap:
+What this router does:
 
-- **Instant** auto-reply in WhatsApp (<2s typical), with wording tuned to the detected intent.
-- Agents get a Slack/CRM ping **only for hot leads**, with a pre-classified intent + the full inbound text.
-- Nurture leads go into a scheduled drip (day 1 / day 3 / day 7), no human touch required.
+- Auto-replies in WhatsApp in <2s, with wording tuned to the detected intent.
+- Pings Slack/CRM only for hot leads, with a pre-classified intent plus
+  the full inbound text.
+- Sends nurture leads into a scheduled drip (day 1 / 3 / 7), no human
+  touch needed.
 
 ## Architecture
 
@@ -45,13 +49,13 @@ This router closes the gap:
 
 ## Features
 
-- **Rule-first intent classifier.** 90% of leads match keyword rules (`looking to buy`, `cash offer`, `investor`, `stop`, etc.) and never hit the LLM. Keeps costs at literally zero for most traffic.
-- **LLM fallback is bounded.** Only ambiguous inputs call out. Response is strict-parsed to one of the allowed labels; any deviation → `nurture` (safe default).
-- **Twilio signature validation** on every webhook — no spoofed requests accepted.
-- **Idempotency** on `MessageSid` — Twilio retries webhooks on timeouts; we dedupe so the same inbound never triggers two auto-replies.
-- **SQLite append-only event log.** Every inbound, classification, outbound, and webhook fire is one row. Replayable for audits, analytics, and A/B tests on templates.
-- **Quiet hours.** Outside configured hours (`QUIET_HOURS_START/END` in owner's TZ), auto-reply says "we received you, we'll respond at 9am" instead of pretending to be awake.
-- **STOP / HELP compliance** (required by Twilio policy).
+- **Rule-first classifier.** Most inbounds match a keyword rule (`looking to buy`, `cash offer`, `investor`, `stop`, etc.) and never hit the LLM, so LLM cost stays near zero.
+- **Bounded LLM fallback.** Only ambiguous inputs go to the LLM. Response is strict-parsed to one of the allowed labels; any deviation → `nurture` (safe default).
+- **Twilio signature validation** on every webhook — spoofed requests are dropped.
+- **Idempotency on `MessageSid`.** Twilio retries webhooks on timeouts; we dedupe so the same inbound never fires two auto-replies.
+- **SQLite append-only event log.** Every inbound, classification, outbound and webhook is a row. Useful for audits and template A/B testing.
+- **Quiet hours.** Outside `QUIET_HOURS_START/END` (in the owner's TZ) the auto-reply is honest — "we got your message, we'll respond at 9am" — instead of pretending to be awake.
+- **STOP / HELP** handlers (required by Twilio).
 
 ## Quickstart
 
@@ -137,6 +141,5 @@ Templates are in `src/templates/` — plain JS functions, easy to localize or br
 
 MIT — see [LICENSE](./LICENSE).
 
----
-
-Built by [Santiago Arteta](https://github.com/sarteta) for real-estate automation engagements. Forks welcome.
+Built by [Santiago Arteta](https://github.com/sarteta) out of real-estate
+automation work. Forks and issues welcome.
