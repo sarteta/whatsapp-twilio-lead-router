@@ -1,0 +1,38 @@
+
+> whatsapp-twilio-lead-router@0.3.0 demo
+> node scripts/demo.js
+
+--- demo mode (no network calls) ---
+
+[1] +15551234567  "Hi, looking to buy a 3-bed in Austin under $500k. Pre-approved."
+    → intent=buyer  reply=YES
+    ↪ Hi Casey — thanks for reaching out about a property. To get you to the right age…
+
+[2] +15552222222  "I want to sell my house on 123 Maple Ave. Cash offer?"
+    → intent=seller  reply=YES
+    ↪ Hi Dana — happy to help you explore selling. Could you share the property addres…
+
+[3] +15553333333  "Investor here, looking for off-market wholesale deals in Denver."
+    → intent=investor  reply=YES
+    ↪ Hi Jules — passing you to our investor-focused agent. To speed things up, share …
+
+[4] +15554444444  "Hey thanks"
+    → intent=nurture  reply=YES
+    ↪ Hi Ambiguous — got it, thanks. An agent will review and reach out. If it's urgen…
+
+[5] +15555555555  "STOP"
+    → intent=stop  reply=YES
+    ↪ You've been unsubscribed. Reply START to opt back in. No further messages will b…
+
+[6] +15556666666  "HELP"
+    → intent=help  reply=YES
+    ↪ Msg&Data rates may apply. Reply STOP to unsubscribe, HELP for help. For support …
+
+[7] +15557777777  "https://spammy.example/win-a-prize"
+    → intent=spam  reply=(none)
+
+[8] +15558888888  "Is 456 Oak St still available? Can I schedule a tour?"
+    → intent=buyer  reply=YES
+    ↪ Hi Robin — thanks for reaching out about a property. To get you to the right age…
+
+--- summary: 7 outbound WhatsApp messages sent ---

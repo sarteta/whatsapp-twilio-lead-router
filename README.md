@@ -1,5 +1,9 @@
 # whatsapp-twilio-lead-router
 
+[![tests](https://github.com/sarteta/whatsapp-twilio-lead-router/actions/workflows/tests.yml/badge.svg)](https://github.com/sarteta/whatsapp-twilio-lead-router/actions/workflows/tests.yml)
+[![node](https://img.shields.io/badge/node-20%20%7C%2022-green)](https://nodejs.org)
+[![license](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
+
 Drop-in Node.js server for **real-estate teams** that:
 
 1. Receives inbound **SMS** on a Twilio number (typically from Zillow / Facebook lead ads / landing-page webhooks).
@@ -13,6 +17,49 @@ Built for small/mid brokerages that want "react in 60 seconds or lose the lead" 
 > Demo data is synthetic (`Acme Realty`, `+15551234567`). Wire in real Twilio creds in `.env` to run against a real number.
 
 ---
+
+## Live demo (no Twilio account needed)
+
+```bash
+npm install
+npm run demo
+```
+
+Actual output — 8 canned inbound messages classified and auto-replied:
+
+```
+[1] +15551234567  "Hi, looking to buy a 3-bed in Austin under $500k. Pre-approved."
+    → intent=buyer  reply=YES
+    ↪ Hi Casey — thanks for reaching out about a property. To get you to the right agent...
+
+[2] +15552222222  "I want to sell my house on 123 Maple Ave. Cash offer?"
+    → intent=seller  reply=YES
+    ↪ Hi Dana — happy to help you explore selling. Could you share the property address...
+
+[3] +15553333333  "Investor here, looking for off-market wholesale deals in Denver."
+    → intent=investor  reply=YES
+    ↪ Hi Jules — passing you to our investor-focused agent...
+
+[4] +15554444444  "Hey thanks"
+    → intent=nurture  reply=YES
+    ↪ Hi Ambiguous — got it, thanks. An agent will review and reach out...
+
+[5] +15555555555  "STOP"
+    → intent=stop  reply=YES
+    ↪ You've been unsubscribed. Reply START to opt back in...
+
+[6] +15556666666  "HELP"
+    → intent=help  reply=YES
+    ↪ Msg&Data rates may apply. Reply STOP to unsubscribe, HELP for help...
+
+[7] +15557777777  "https://spammy.example/win-a-prize"
+    → intent=spam  reply=(none)
+
+[8] +15558888888  "Is 456 Oak St still available? Can I schedule a tour?"
+    → intent=buyer  reply=YES
+```
+
+Full demo transcript in [`examples/demo-output.txt`](./examples/demo-output.txt). No network calls are made — all Twilio clients are stubs.
 
 ## Why this exists
 
