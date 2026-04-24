@@ -25,7 +25,9 @@ npm install
 npm run demo
 ```
 
-Actual output — 8 canned inbound messages classified and auto-replied:
+![demo](./examples/demo.png)
+
+Text transcript — 8 canned inbound messages classified and auto-replied:
 
 ```
 [1] +15551234567  "Hi, looking to buy a 3-bed in Austin under $500k. Pre-approved."
