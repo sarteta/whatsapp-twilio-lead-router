@@ -1,4 +1,4 @@
-// `npm run demo` — fires 8 synthetic SMS payloads through the pipeline
+// `npm run demo` -- fires 8 synthetic SMS payloads through the pipeline
 // using the mock Twilio driver. Zero network calls, prints each step.
 
 import { openStore } from '../src/store.js';

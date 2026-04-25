@@ -1,4 +1,4 @@
-// Express wrapper around the handler. Kept thin on purpose — business
+// Express wrapper around the handler. Kept thin on purpose -- business
 // logic lives in handler.js so it's unit-testable without HTTP.
 
 import 'dotenv/config';
@@ -44,7 +44,7 @@ export function buildApp({
       notifyWebhook,
     });
 
-    // Always 200 — we logged, we own retries via MessageSid dedup.
+    // Always 200 -- we logged, we own retries via MessageSid dedup.
     // Empty TwiML = "we handled it, don't auto-reply on your end".
     res.type('text/xml').send('<?xml version="1.0" encoding="UTF-8"?><Response></Response>');
     // eslint-disable-next-line no-console
@@ -67,7 +67,7 @@ function driverFromEnv() {
   const sid = process.env.TWILIO_ACCOUNT_SID;
   const token = process.env.TWILIO_AUTH_TOKEN;
   if (!sid || !token) {
-    console.warn('[twilio] no credentials found — running mock driver (demo mode)');
+    console.warn('[twilio] no credentials found -- running mock driver (demo mode)');
     return mockDriver();
   }
   return realDriver({
@@ -77,7 +77,7 @@ function driverFromEnv() {
   });
 }
 
-// `node src/server.js` — production entrypoint
+// `node src/server.js` -- production entrypoint
 const isMain = import.meta.url === `file://${process.argv[1].replace(/\\/g, '/')}`
             || import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`;
 if (isMain) {

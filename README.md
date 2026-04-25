@@ -4,15 +4,13 @@
 [![node](https://img.shields.io/badge/node-20%20%7C%2022-green)](https://nodejs.org)
 [![license](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 
-Drop-in Node.js server for **real-estate teams** that:
+Node.js server for inbound lead handling on Twilio. The default templates and intent set are tuned for real-estate (buyer / seller / investor) but the rule classifier is configurable for any vertical.
 
-1. Receives inbound **SMS** on a Twilio number (typically from Zillow / Facebook lead ads / landing-page webhooks).
-2. Classifies the lead intent — **buyer / seller / investor / nurture / spam** — with a cheap rule engine first, then falls back to an LLM only when the rule engine is unsure.
-3. Fires an **auto-reply over WhatsApp** (via Twilio WhatsApp sender) using an intent-specific template.
+1. Receives inbound SMS on a Twilio number (Zillow / Facebook lead ads / landing-page webhooks).
+2. Classifies intent (buyer / seller / investor / nurture / spam) with a rule engine first, falling back to an LLM only when ambiguous.
+3. Fires an auto-reply over WhatsApp using an intent-specific template.
 4. Persists the lead + conversation in SQLite with an append-only event log.
-5. Routes high-intent leads to a webhook (`LEAD_NOTIFY_WEBHOOK`) — Slack, CRM, whatever — with full context.
-
-Built for small/mid brokerages that want "react in 60 seconds or lose the lead" and don't want a full CRM subscription for it.
+5. Routes high-intent leads to a webhook (Slack, CRM, anything) with full context.
 
 > Demo data is synthetic (`Acme Realty`, `+15551234567`). Wire in real Twilio creds in `.env` to run against a real number.
 
@@ -27,24 +25,24 @@ npm run demo
 
 ![demo](./examples/demo.png)
 
-Text transcript — 8 canned inbound messages classified and auto-replied:
+Text transcript -- 8 canned inbound messages classified and auto-replied:
 
 ```
 [1] +15551234567  "Hi, looking to buy a 3-bed in Austin under $500k. Pre-approved."
     → intent=buyer  reply=YES
-    ↪ Hi Casey — thanks for reaching out about a property. To get you to the right agent...
+    ↪ Hi Casey -- thanks for reaching out about a property. To get you to the right agent...
 
 [2] +15552222222  "I want to sell my house on 123 Maple Ave. Cash offer?"
     → intent=seller  reply=YES
-    ↪ Hi Dana — happy to help you explore selling. Could you share the property address...
+    ↪ Hi Dana -- happy to help you explore selling. Could you share the property address...
 
 [3] +15553333333  "Investor here, looking for off-market wholesale deals in Denver."
     → intent=investor  reply=YES
-    ↪ Hi Jules — passing you to our investor-focused agent...
+    ↪ Hi Jules -- passing you to our investor-focused agent...
 
 [4] +15554444444  "Hey thanks"
     → intent=nurture  reply=YES
-    ↪ Hi Ambiguous — got it, thanks. An agent will review and reach out...
+    ↪ Hi Ambiguous -- got it, thanks. An agent will review and reach out...
 
 [5] +15555555555  "STOP"
     → intent=stop  reply=YES
@@ -61,25 +59,7 @@ Text transcript — 8 canned inbound messages classified and auto-replied:
     → intent=buyer  reply=YES
 ```
 
-Full demo transcript in [`examples/demo-output.txt`](./examples/demo-output.txt). No network calls are made — all Twilio clients are stubs.
-
-## Why this exists
-
-In real-estate, most lead conversion happens in the first few minutes
-after inbound contact. Brokerages miss that window all the time because:
-
-- Agent sees the SMS at 9:47 PM and deals with it next morning.
-- Generic "thanks, we'll be in touch" autoresponders burn the lead.
-- When an agent does reply, there's no intent tag, so a hot buyer and a
-  tire-kicker get treated the same.
-
-What this router does:
-
-- Auto-replies in WhatsApp in <2s, with wording tuned to the detected intent.
-- Pings Slack/CRM only for hot leads, with a pre-classified intent plus
-  the full inbound text.
-- Sends nurture leads into a scheduled drip (day 1 / 3 / 7), no human
-  touch needed.
+Full demo transcript in [`examples/demo-output.txt`](./examples/demo-output.txt). No network calls are made -- all Twilio clients are stubs.
 
 ## Architecture
 
@@ -100,10 +80,10 @@ Versión en español: [README.es.md](./README.es.md)
 
 - **Rule-first classifier.** Most inbounds match a keyword rule (`looking to buy`, `cash offer`, `investor`, `stop`, etc.) and never hit the LLM, so LLM cost stays near zero.
 - **Bounded LLM fallback.** Only ambiguous inputs go to the LLM. Response is strict-parsed to one of the allowed labels; any deviation → `nurture` (safe default).
-- **Twilio signature validation** on every webhook — spoofed requests are dropped.
+- **Twilio signature validation** on every webhook -- spoofed requests are dropped.
 - **Idempotency on `MessageSid`.** Twilio retries webhooks on timeouts; we dedupe so the same inbound never fires two auto-replies.
 - **SQLite append-only event log.** Every inbound, classification, outbound and webhook is a row. Useful for audits and template A/B testing.
-- **Quiet hours.** Outside `QUIET_HOURS_START/END` (in the owner's TZ) the auto-reply is honest — "we got your message, we'll respond at 9am" — instead of pretending to be awake.
+- **Quiet hours.** Outside `QUIET_HOURS_START/END` (in the owner's TZ) the auto-reply is honest -- "we got your message, we'll respond at 9am" -- instead of pretending to be awake.
 - **STOP / HELP** handlers (required by Twilio).
 
 ## Quickstart
@@ -129,7 +109,7 @@ https://your-host.example/webhooks/sms
 npm run demo
 ```
 
-Spins up the server + fires 8 synthetic SMS payloads against it (buyer / seller / investor / spam / stop / etc.), prints classification + auto-reply for each. Uses the mock Twilio driver — zero network calls.
+Spins up the server + fires 8 synthetic SMS payloads against it (buyer / seller / investor / spam / stop / etc.), prints classification + auto-reply for each. Uses the mock Twilio driver -- zero network calls.
 
 ## Configuration
 
@@ -170,7 +150,7 @@ DATABASE_PATH=./data/leads.sqlite
 | `help` | HELP | Standard help footer (Twilio policy) |
 | `spam` | obvious URL-only / known spam patterns | No reply |
 
-Templates are in `src/templates/` — plain JS functions, easy to localize or brand.
+Templates are in `src/templates/` -- plain JS functions, easy to localize or brand.
 
 ## Project status
 
@@ -188,7 +168,4 @@ Templates are in `src/templates/` — plain JS functions, easy to localize or br
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
-
-Built by [Santiago Arteta](https://github.com/sarteta) out of real-estate
-automation work. Forks and issues welcome.
+MIT

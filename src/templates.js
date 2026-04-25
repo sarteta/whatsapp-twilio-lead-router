@@ -5,26 +5,26 @@
 
 export const TEMPLATES = {
   buyer: ({ firstName }) => (
-    `Hi ${firstName || 'there'} — thanks for reaching out about a property. ` +
+    `Hi ${firstName || 'there'} -- thanks for reaching out about a property. ` +
     `To get you to the right agent fast, could you share: ` +
     `(1) the area you're focused on, (2) your target price range, and ` +
     `(3) whether you're pre-approved? An agent will follow up within the hour.`
   ),
 
   seller: ({ firstName }) => (
-    `Hi ${firstName || 'there'} — happy to help you explore selling. ` +
+    `Hi ${firstName || 'there'} -- happy to help you explore selling. ` +
     `Could you share the property address and your rough timeline? ` +
     `We'll get a no-obligation valuation back to you within 24 hours.`
   ),
 
   investor: ({ firstName }) => (
-    `Hi ${firstName || 'there'} — passing you to our investor-focused agent. ` +
+    `Hi ${firstName || 'there'} -- passing you to our investor-focused agent. ` +
     `To speed things up, share your criteria (market, price ceiling, strategy). ` +
     `We'll match you against our off-market list today.`
   ),
 
   nurture: ({ firstName }) => (
-    `Hi ${firstName || 'there'} — got it, thanks. ` +
+    `Hi ${firstName || 'there'} -- got it, thanks. ` +
     `An agent will review and reach out. If it's urgent, reply URGENT and we'll prioritize.`
   ),
 
@@ -41,7 +41,7 @@ export const TEMPLATES = {
 };
 
 const QUIET_PREFIX = (
-  `We received your message after hours — we'll respond first thing in the morning. `
+  `We received your message after hours -- we'll respond first thing in the morning. `
 );
 
 export function buildReply({ intent, firstName, isQuietHours }) {

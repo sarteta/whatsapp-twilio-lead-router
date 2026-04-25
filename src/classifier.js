@@ -1,6 +1,6 @@
 // Rule-first intent classifier.
 // The whole point: cheap, deterministic, explainable. The LLM is fallback
-// only — it NEVER sees traffic we can handle with rules.
+// only -- it NEVER sees traffic we can handle with rules.
 
 export const INTENTS = Object.freeze([
   'buyer',
@@ -17,11 +17,11 @@ const RULES = [
   { intent: 'stop', pattern: /^(stop|stopall|unsubscribe|cancel|end|quit)\b/i },
   { intent: 'help', pattern: /^help\b/i },
 
-  // Obvious spam — URL-only payloads, known spam hooks.
+  // Obvious spam -- URL-only payloads, known spam hooks.
   { intent: 'spam', pattern: /^\s*https?:\/\/\S+\s*$/i },
   { intent: 'spam', pattern: /\b(click here|win prize|free iphone|bitcoin giveaway)\b/i },
 
-  // Seller signals — these are strong; check before buyer.
+  // Seller signals -- these are strong; check before buyer.
   { intent: 'seller', pattern: /\b(sell(ing)? (my )?(home|house|property))\b/i },
   { intent: 'seller', pattern: /\b(cash offer|home valuation|what'?s my house worth|list my)\b/i },
 
@@ -51,7 +51,7 @@ export function classifyByRules(text) {
 }
 
 /**
- * LLM fallback — called only when `classifyByRules` returns `intent: null`.
+ * LLM fallback -- called only when `classifyByRules` returns `intent: null`.
  * Strict output contract: must return one of INTENTS; anything else collapses
  * to `nurture` (the safe, non-damaging default).
  */

@@ -1,4 +1,4 @@
-// Core inbound handler — separated from express so we can unit-test it
+// Core inbound handler -- separated from express so we can unit-test it
 // cleanly without booting a server or mocking HTTP.
 
 import { classify } from './classifier.js';
