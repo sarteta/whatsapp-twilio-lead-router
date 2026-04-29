@@ -1,6 +1,7 @@
 # whatsapp-twilio-lead-router
 
 [![tests](https://github.com/sarteta/whatsapp-twilio-lead-router/actions/workflows/tests.yml/badge.svg)](https://github.com/sarteta/whatsapp-twilio-lead-router/actions/workflows/tests.yml)
+[![docker](https://github.com/sarteta/whatsapp-twilio-lead-router/actions/workflows/docker.yml/badge.svg)](https://github.com/sarteta/whatsapp-twilio-lead-router/actions/workflows/docker.yml)
 [![node](https://img.shields.io/badge/node-20%20%7C%2022-green)](https://nodejs.org)
 [![license](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 
